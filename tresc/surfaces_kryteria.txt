@@ -1,0 +1,31 @@
+== Cele dydaktyczne ==
+
+Studenci powinni:
+- poznać podstawowe zasady programowania funkcyjnego w C++;
+- ugruntować umiejętności programowania w C++ poznane przy rozwiązywaniu
+  poprzednich zadań.
+
+== Ocena z testów automatycznych: 0 - 6 pkt. ==
+
+Po jednym punkcie za przejście wszystkich testów z grup od 1xx do 6xx.
+
+== Ocena za jakość kodu: 0 - 4 pkt. ==
+
+Zaczynamy od 4 punktów i odejmujemy po jednym za każdą usterkę:
+- niezgodność zawartości repozytorium ze specyfikacją zadania;
+- ostrzeżenia wypisywane przez kompilator;
+- brzydkie formatowanie kodu, brak lub ubogie komentarze, powtórzenia kodu,
+  zbędne lub nadmiarowe #include (nawet gdy plik się kompiluje);
+- niedostateczne użycie funkcji lambda;
+- zastosowanie imperatywnego if lub if-else zamiast funkcyjnego, czyli
+  operatora ?:;
+- nieukrycie pomocniczych klas, struktur i funkcji przed światem zewnętrznym;
+- niezastosowanie się do kryteriów oceniania poprzednich zadań;
+- niezastosowanie się do uwag udzielonych przy ocenie poprzednich zadań.
+
+O ile nie zostanie to wykryte przez testy automatyczne, to będą też odejmowane
+punkty za:
+- brak header guard;
+- braki const;
+- definiowanie funkcji w pliku nagłówkowym prowadzące do błędu linkowania.
+Ocena nie może być ujemna.
