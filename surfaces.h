@@ -104,4 +104,19 @@ Surface sqr()
     };
 }
 
+Surface sin_wave()
+{
+    return [] (const Point &p) -> Real {
+        return std::sin(p.x);
+    };
+}
+
+Surface cos_wave()
+{
+    return [] (const Point &p) -> Real {
+        return std::cos(p.x);
+    };
+}
+
+
 #endif
