@@ -4,6 +4,7 @@
 #include "real.h"
 #include <iostream>
 #include <functional>
+#include <cmath>
 
 constexpr Real STEP_HEIGHT = 1;
 
@@ -37,7 +38,7 @@ using Surface = std::function<Real(Point)>;
 Surface plain()
 {
     // We want to stress that returned value is of type REAL.
-    return [](const Point &p) -> Real {return 0;};
+    return []([[maybe_unused]] const Point &p) -> Real {return 0;};
 }
 
 /**
@@ -48,10 +49,15 @@ Surface slope()
     return [](const Point &p) -> Real {return p.x;};
 }
 
-Surface steps(Real s = 1)
+Surface steps(const Real s = 1)
 {
-    static const Real step_height = STEP_HEIGHT;
-     
+    const Real step_height = STEP_HEIGHT;
+    return [s, step_height] (const Point &p) -> Real {
+        
+        return (s <= 0) ? Real(0) : 
+        ((p.x >= 0) ? std::floor(p.x / s)* step_height : 
+        (std::floor(((-1) * p.x) / s) * (-1) * step_height - 1));
+    };
 }
 
 
