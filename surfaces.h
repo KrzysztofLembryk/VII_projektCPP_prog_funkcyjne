@@ -87,16 +87,21 @@ Surface checkers(const Real s = 1)
         const int x_parity = (s <= 0) ? 0 : (p.x < 0) ? 
             ((int)(std::floor((-p.x + s) / s)) % 2) : 
             ((int)(std::floor(p.x / s)) % 2);
-            
+
         const int y_parity = (s <= 0) ? 0 : (p.y < 0) ? 
             ((int)(std::floor((-p.y) / s)) % 2) : 
             ((int)(std::floor(p.y / s)) % 2);
 
         return (s <= 0) ? Real(0) : 
                                 ((x_parity == y_parity) ? Real(1) : Real(0));
-    };
-    
+    }; 
+}
 
+Surface sqr()
+{
+    return [] (const Point &p) -> Real {
+        return p.x * p.x;
+    };
 }
 
 #endif
