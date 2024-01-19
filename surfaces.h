@@ -118,5 +118,14 @@ Surface cos_wave()
     };
 }
 
+Surface rings(const Real s = 1)
+{
+    auto calc_dist_from_zero = [] (const Point &p) -> Real {
+        return std::sqrt(p.x * p.x + p.y * p.y);
+    };
+    return [=] (const Point &p) -> Real {
+        return (s <= 0) ? 0 : (std::fmod(calc_dist_from_zero(p), s) == 0 ? 1 : 0);
+    };
+}
 
 #endif

@@ -3,7 +3,7 @@
 
 using std::cout;
 
-void TEST_plain_func()
+void TEST_plain()
 {
     auto plain_function = plain();
 
@@ -13,7 +13,7 @@ void TEST_plain_func()
 }
 
 
-void TEST_slope_func()
+void TEST_slope()
 {
     auto slope_function = slope();
 
@@ -22,7 +22,7 @@ void TEST_slope_func()
     assert(slope_function(Point(-7, 22)) == -7);
 }
 
-void TEST_steps_func()
+void TEST_steps()
 {
     auto stepping_function = steps();
     
@@ -41,12 +41,27 @@ void TEST_steps_func()
 }
 
 
+void TEST_rings()
+{   
+    // Width of ring is 1;
+    auto rings_func = rings(1);
+
+    assert(rings_func(Point(0, 1)) == 1);
+    assert(rings_func(Point(0, -1)) == 1);
+    assert(rings_func(Point(1, 0)) == 1);
+    assert(rings_func(Point(-1, 0)) == 1);
+    assert(rings_func(Point(2, 0)) == 1);
+    assert(rings_func(Point(std::sqrt(2) / 2, std::sqrt(2) / 2)) == 1);
+
+    assert(rings_func(Point(1, 1)) == 0);
+}
+
+
 int main()
 {
-    TEST_plain_func();
-    TEST_slope_func();
-    TEST_steps_func();
-    
-
+    TEST_plain();
+    TEST_slope();
+    TEST_steps();
+    TEST_rings();
     return 0;
 }
