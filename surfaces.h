@@ -64,7 +64,7 @@ Surface slope()
 Surface steps(const Real s = 1)
 {
     const Real step_height = STEP_HEIGHT;
-    
+
     return [s, step_height] (const Point &p) -> Real {
         
         return (s <= 0) ? Real(0) : 
@@ -78,7 +78,24 @@ Surface steps(const Real s = 1)
 */
 Surface checkers(const Real s = 1)
 {
+    // Edge case with x and y negative
+    return [s] (const Point &p) -> Real {
 
+        // If x < 0 we add s to is since we want to change its parity
+        // since if we didnt we could get -s < x1 <= 0 and 0 <= x2 < s
+        // with values of f both equal to i.e. 1.
+        const int x_parity = (s <= 0) ? 0 : (p.x < 0) ? 
+            ((int)(std::floor((-p.x + s) / s)) % 2) : 
+            ((int)(std::floor(p.x / s)) % 2);
+            
+        const int y_parity = (s <= 0) ? 0 : (p.y < 0) ? 
+            ((int)(std::floor((-p.y) / s)) % 2) : 
+            ((int)(std::floor(p.y / s)) % 2);
+
+        return (s <= 0) ? Real(0) : 
+                                ((x_parity == y_parity) ? Real(1) : Real(0));
+    };
+    
 
 }
 
