@@ -54,6 +54,8 @@ void TEST_rings()
     assert(rings_func(Point(std::sqrt(2) / 2, std::sqrt(2) / 2)) == 1);
 
     assert(rings_func(Point(1, 1)) == 0);
+    assert(rings_func(Point(1, 2)) == 0);
+    assert(rings_func(Point(0.5, 1.5)) == 0);
 }
 
 

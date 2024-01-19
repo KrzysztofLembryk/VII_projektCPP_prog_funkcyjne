@@ -123,9 +123,35 @@ Surface rings(const Real s = 1)
     auto calc_dist_from_zero = [] (const Point &p) -> Real {
         return std::sqrt(p.x * p.x + p.y * p.y);
     };
+
     return [=] (const Point &p) -> Real {
         return (s <= 0) ? 0 : (std::fmod(calc_dist_from_zero(p), s) == 0 ? 1 : 0);
     };
 }
+
+Surface ellipse(const Real a = 1, const Real b = 1)
+{   
+    auto check_if_in_ellipse = [=] (const Point &p) -> bool {
+        return ((p.x * p.x ) / a + (p.y * p.y) / b) <= 1;
+    };
+
+    return [=] (const Point &p) -> Real {
+        return (a <= 0 || b <= 0) ? 0 : (check_if_in_ellipse(p) ? 1 : 0);
+    };
+}
+
+Surface rectangle(const Real a = 1, const Real b = 1)
+{
+    auto check_if_inside = [=] (const Point &p) -> bool {
+        return (p.x <= a / 2 && p.x >= -a / 2 && 
+                p.y <= b / 2 && p.y >= -b / 2) ? 1 : 0;
+    };
+
+    return [=] (const Point &p) -> Real {
+        return (a <= 0 || b <= 0) ? 0 : (check_if_inside(p) ? 1 : 0);
+    };
+}
+
+
 
 #endif
