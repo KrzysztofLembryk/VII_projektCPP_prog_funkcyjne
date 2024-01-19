@@ -49,16 +49,37 @@ Surface slope()
     return [](const Point &p) -> Real {return p.x;};
 }
 
+/**
+ * Generates step plain along OX, with step width = s (default = 1)
+ * and step height = 1. 
+ * If s <= 0 : f(x, y) = 0
+ * For 0 <= x < s we have f(x, y) = 0,
+ * for -s <= x < 0 : f(x, y) = -1
+ * Main formula for getting step height for given x: floor(x / s) * step_height
+ * Since new step starts when x >= s, so we have 
+ * first step: s <= x < 2s
+ * second step: 2s <= x < 3s ... So we se that when taking floor(x / s)
+ * we will get k that satisfies k * s <= x, and k is the number of step. 
+*/
 Surface steps(const Real s = 1)
 {
     const Real step_height = STEP_HEIGHT;
+    
     return [s, step_height] (const Point &p) -> Real {
         
         return (s <= 0) ? Real(0) : 
-        ((p.x >= 0) ? std::floor(p.x / s)* step_height : 
-        (std::floor(((-1) * p.x) / s) * (-1) * step_height - 1));
+        ((p.x >= 0) ? Real(std::floor(p.x / s)* step_height) : 
+        Real(std::floor(((-1) * p.x) / s) * (-1) * step_height - 1));
     };
 }
 
+/**
+ * 
+*/
+Surface checkers(const Real s = 1)
+{
+
+
+}
 
 #endif

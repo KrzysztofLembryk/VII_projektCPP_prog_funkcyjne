@@ -3,6 +3,24 @@
 
 using std::cout;
 
+void TEST_plain_func()
+{
+    auto plain_function = plain();
+
+    assert(plain_function(Point(0, 0)) == 0);
+    assert(plain_function(Point(69, 0)) == 0);
+    assert(plain_function(Point(-69, 0)) == 0);
+}
+
+
+void TEST_slope_func()
+{
+    auto slope_function = slope();
+
+    assert(slope_function(Point(2, 22)) == 2);
+    assert(slope_function(Point(0, 22)) == 0);
+    assert(slope_function(Point(-7, 22)) == -7);
+}
 
 void TEST_steps_func()
 {
@@ -17,7 +35,7 @@ void TEST_steps_func()
 
     // x < 0
     assert(stepping_function(Point(-0.5, 12)) == -1);
-    assert(stepping_function(Point(-1, 12)) == -2);
+    assert(stepping_function(Point(-1, 112)) == -2);
     assert(stepping_function(Point(-5, 12)) == -6);
 
 }
@@ -25,6 +43,8 @@ void TEST_steps_func()
 
 int main()
 {
+    TEST_plain_func();
+    TEST_slope_func();
     TEST_steps_func();
     
 
