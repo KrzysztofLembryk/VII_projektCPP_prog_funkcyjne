@@ -152,6 +152,16 @@ Surface rectangle(const Real a = 1, const Real b = 1)
     };
 }
 
+Surface stripes(const Real s)
+{
+    return [=] (const Point &p) -> Real {
 
+        const int x_parity = (s <= 0) ? 0 : (p.x < 0) ? 
+            ((int)(std::floor((-p.x + s) / s)) % 2) : 
+            ((int)(std::floor(p.x / s)) % 2);
+
+        return (s <= 0) ? 0 : (x_parity == 0) ? 1 : 0; 
+    };
+}
 
 #endif
