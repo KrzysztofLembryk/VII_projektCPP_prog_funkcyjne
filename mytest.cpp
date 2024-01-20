@@ -58,6 +58,13 @@ void TEST_rings()
     assert(rings_func(Point(0.5, 1.5)) == 0);
 }
 
+void TEST_evaluate()
+{
+    auto addition = [](Real const & x, Real const & y) {return x + y;};
+    auto eval_func1 = evaluate(addition, sqr(),slope());
+    assert(eval_func1(Point(1, 5)) == 2);
+}
+
 
 int main()
 {
@@ -65,5 +72,6 @@ int main()
     TEST_slope();
     TEST_steps();
     TEST_rings();
+    TEST_evaluate();
     return 0;
 }
