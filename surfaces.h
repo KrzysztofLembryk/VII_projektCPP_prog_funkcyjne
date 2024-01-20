@@ -32,6 +32,8 @@ std::ostream &operator<<(std::ostream &out, const Point &p)
 */
 using Surface = std::function<Real(Point)>;
 
+// FUNCTIONS FOR CREATING PLAINS
+
 /**
  * Generates plain f(x, y) = 0;
 */
@@ -161,6 +163,17 @@ Surface stripes(const Real s)
             ((int)(std::floor(p.x / s)) % 2);
 
         return (s <= 0) ? 0 : (x_parity == 0) ? 1 : 0; 
+    };
+}
+
+// FUNCTIONS FOR PLAIN MANIPULATION
+
+Surface rotate(const Surface &f, const Real deg)
+{
+    return [=] (const Point &p) -> Real {
+        const Real new_x = p.x * std::cos(deg) - p.y * std::sin(deg);
+        const Real new_y = p.y * std::cos(deg) + p.x * std::sin(deg);
+        return f(Point(new_x, new_y));
     };
 }
 
