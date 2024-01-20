@@ -202,4 +202,26 @@ Surface invert(const Surface &f)
     };
 }
 
+Surface flip(const Surface &f)
+{
+    return [=] (const Point &p) -> Real {
+        return f(Point(-p.x, p.y));
+    };
+}
+
+Surface mul(const Surface &f, const Real c)
+{
+    return [=] (const Point &p) -> Real {
+        return f(p) * c;
+    };
+}
+
+Surface add(const Surface &f, const Real c)
+{
+    return [=] (const Point &p) -> Real {
+        return f(p) + c;
+    };
+}
+
+
 #endif
