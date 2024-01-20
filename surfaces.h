@@ -177,4 +177,29 @@ Surface rotate(const Surface &f, const Real deg)
     };
 }
 
+Surface translate(const Surface &f, const Point &vec)
+{
+    return [=] (const Point &p) -> Real {
+        const Real new_x = p.x + vec.x;
+        const Real new_y = p.y + vec.y;
+        return f(Point(new_x, new_y));
+    };
+}
+
+Surface scale(const Surface &f, const Point &scale)
+{
+    return [=] (const Point &p) -> Real {
+        const Real new_x = p.x * scale.x;
+        const Real new_y = p.y * scale.y;
+        return f(Point(new_x, new_y));
+    };
+}
+
+Surface invert(const Surface &f)
+{
+    return [=] (const Point &p) -> Real {
+        return f(Point(p.y, p.x));
+    };
+}
+
 #endif
