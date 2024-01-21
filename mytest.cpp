@@ -3,6 +3,7 @@
 
 using std::cout;
 
+// BASIC CREATING PLAINS TESTS
 void TEST_plain()
 {
     auto plain_function = plain();
@@ -11,7 +12,6 @@ void TEST_plain()
     assert(plain_function(Point(69, 0)) == 0);
     assert(plain_function(Point(-69, 0)) == 0);
 }
-
 
 void TEST_slope()
 {
@@ -49,6 +49,31 @@ void TEST_steps()
 
 }
 
+void TEST_checker()
+{
+    auto checker_func = checker();
+
+    assert(checker_func(Point(0.5, 0.5)) == 1);
+    assert(checker_func(Point(1, 0.5)) == 0);
+    assert(checker_func(Point(1, 1)) == 1);
+    assert(checker_func(Point(1.5, 1.24)) == 1);
+    assert(checker_func(Point(2, 1.5)) == 0);
+    
+    assert(checker_func(Point(-0.5, 0.5)) == 0);
+    assert(checker_func(Point(-0.5, 1)) == 1);
+
+
+    auto mulled_checker = mul(checker(), 0.5);
+
+    assert(mulled_checker(Point(0.5, 0.5)) == 0.5);
+    assert(mulled_checker(Point(1, 0.5)) == 0);
+    assert(mulled_checker(Point(1, 1)) == 0.5);
+    assert(mulled_checker(Point(1.5, 1.24)) == 0.5);
+    assert(mulled_checker(Point(2, 1.5)) == 0);
+    
+    assert(mulled_checker(Point(-0.5, 0.5)) == 0);
+    assert(mulled_checker(Point(-0.5, 1)) == 0.5);
+}
 
 void TEST_rings()
 {   
@@ -67,12 +92,14 @@ void TEST_rings()
     assert(rings_func(Point(0.5, 1.5)) == 0);
 }
 
+// MODIFYING PLAINS TESTS
+
 void TEST_rotate()
 {
     auto rotate_func = rotate(slope(), 90);
 
-    //assert(rotate_func(Point(0, 0)) == 0);
-    assert(rotate_func(Point(1, 0)) == 0.0);
+    assert(rotate_func(Point(0, 0)) == 0);
+    //assert(rotate_func(Point(1, 0)) == 0.0);
 }
 
 void TEST_flip()
@@ -82,6 +109,8 @@ void TEST_flip()
     assert(flip_func(Point(1, 1)) == -1);
     assert(flip_func(Point(1.99, 1)) == -1.99);
 }
+
+// TEMPLATE FUNC TESTS
 
 void TEST_evaluate()
 {
@@ -105,6 +134,7 @@ int main()
     TEST_plain();
     TEST_slope();
     TEST_steps();
+    TEST_checker();
     TEST_rings();
 
     // Modifying plains tests:

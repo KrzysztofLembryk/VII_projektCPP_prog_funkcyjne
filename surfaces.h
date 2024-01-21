@@ -85,11 +85,11 @@ inline Surface checker(const Real s = 1)
         // since if we didnt we could get -s < x1 <= 0 and 0 <= x2 < s
         // with values of f both equal to i.e. 1.
         const int x_parity = (s <= 0) ? 0 : (p.x < 0) ? 
-            ((int)(std::floor((-p.x + s) / s)) % 2) : 
+            ((int)(std::floor(((-1) * p.x + s) / s)) % 2) : 
             ((int)(std::floor(p.x / s)) % 2);
 
         const int y_parity = (s <= 0) ? 0 : (p.y < 0) ? 
-            ((int)(std::floor((-p.y) / s)) % 2) : 
+            ((int)(std::floor(((-1) * p.y) / s)) % 2) : 
             ((int)(std::floor(p.y / s)) % 2);
 
         return (s <= 0) ? Real(0) : 
@@ -107,16 +107,16 @@ inline Surface sqr()
 inline Surface sin_wave()
 {
     return [] (const Point &p) -> Real {
-        const Real radians = (-1) * p.x * (M_PI / SEMI_FULL_ANGLE);
-        return std::sin(radians);
+        //const Real radians = (-1) * p.x * (M_PI / SEMI_FULL_ANGLE);
+        return std::sin(p.x);
     };
 }
 
 inline Surface cos_wave()
 {
     return [] (const Point &p) -> Real {
-        const Real radians = (-1) * p.x * (M_PI / SEMI_FULL_ANGLE);
-        return std::cos(radians);
+        //const Real radians = (-1) * p.x * (M_PI / SEMI_FULL_ANGLE);
+        return std::cos(p.x);
     };
 }
 
@@ -215,7 +215,7 @@ inline Surface flip(const Surface &f)
 inline Surface mul(const Surface &f, const Real c)
 {
     return [=] (const Point &p) -> Real {
-        return f(p) * c;
+        return (f(p) * c);
     };
 }
 
