@@ -223,7 +223,7 @@ inline Surface add(const Surface &f, const Real c)
 // TEMPLATE FUNCTIONS
 
 template <typename H, typename T, typename... Args>
-inline constexpr Real unpack_and_calc_h(const auto &p, H &&h, T &&f, 
+inline constexpr auto unpack_and_calc_h(const auto &p, H &&h, T &&f, 
     Args &&...args)
 {
     if constexpr (sizeof...(args) == 0)
