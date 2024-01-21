@@ -119,7 +119,7 @@ inline Surface rings(const Real s = 1)
     };
 
     return [=] (const Point &p) -> Real {
-        return (s <= 0) ? 0 : (std::fmod(calc_dist_from_zero(p), s) == 0 ? 1 : 0);
+        return (s <= 0) ? 0 : (int)(calc_dist_from_zero(p) / s) % 2 == 0 ? 1 : 0;
     };
 }
 
