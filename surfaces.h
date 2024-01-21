@@ -222,34 +222,19 @@ Surface add(const Surface &f, const Real c)
 
 // TEMPLATE FUNCTIONS
 
-/**
- * 
-*/
-// template <typename T, T... args>
-// constexpr auto unpack_func_to_array()
-// {
-//     return std::array<T, sizeof...(args)>{std::forward<T>(args)...};
-// }
-
-// template <typename T, T... args>
-//     constexpr auto unpack_f_to_tuple(std::integer_sequence<T, args...>)
-//     {
-//         return std::tuple<std::integral_constant<T, args>...>{};
-//     }
-
 template <typename H, typename T, typename... Args>
 constexpr Real unpack_and_calc_h(const Point &p, H &&h, T &&f, Args &&...args)
 {
     if constexpr (sizeof...(args) == 0)
     {
-        auto val = std::invoke(f, p);
-        auto binded_h_func = std::bind_front(h, val);
+        const auto val = std::invoke(f, p);
+        const auto binded_h_func = std::bind_front(h, val);
         return std::invoke(binded_h_func);
     }
     else
     {
-        auto val = std::invoke(f, p);
-        auto binded_h_func = std::bind_front(h, val);
+        const auto val = std::invoke(f, p);
+        const auto binded_h_func = std::bind_front(h, val);
 
         return unpack_and_calc_h(p, binded_h_func,
              std::forward<Args>(args)...);
@@ -259,22 +244,6 @@ constexpr Real unpack_and_calc_h(const Point &p, H &&h, T &&f, Args &&...args)
 template<typename T, typename... Args>
 Surface evaluate(T &&h, Args &&...f_args)
 {
-    // auto func_arr = unpack_func_to_array<T, f_args>();
-    // std::array<Real, sizeof...(f_args)> func_results;
-    
-    // return [=] (const Point &p) -> Real {
-
-    //     std::apply([&](auto &&...tupleArg)
-    //                        { (std::invoke(
-    //                         std::bind_front(h, 
-    //                         std::invoke(tupleArg, p))), ...); },
-    //                        unpack_f_to_tuple(T{}));
-    // };
-
-    // return [=] (const Point &p) -> Real {
-    //     return unpack_and_calc_h(p, std::forward<T>(h), 
-    //         std::forward<Args>(f_args)...);
-    // };
     // We cannot do i.e. std::forward<T>(h) since we do [=] in lambda expr
     // thus we make a new object - a copy of h, so its no longer &&. 
     return [=] (const Point &p) -> Real {

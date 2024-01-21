@@ -62,7 +62,10 @@ void TEST_evaluate()
 {
     auto addition = [](Real const & x, Real const & y) {return x + y;};
     auto eval_func1 = evaluate(addition, sqr(),slope());
+
     assert(eval_func1(Point(1, 5)) == 2);
+    assert(eval_func1(Point(2, 5)) == 6);
+    assert(eval_func1(Point(1.2, 5)) == 1.44 + 1.2);
 }
 
 
