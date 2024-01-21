@@ -81,16 +81,6 @@ inline Surface checker(const Real s = 1)
     // Edge case with x and y negative
     return [=] (const Point &p) -> Real {
 
-        // If x < 0 we add s to is since we want to change its parity
-        // cause if we didnt we could get -s < x1 <= 0 and 0 <= x2 < s
-        // with values of f both equal to i.e. 1.
-        // const int x_parity = (s <= 0) ? 0 : (p.x < 0) ? 
-        //     ((int)(std::floor(((-1) * p.x + s) / s)) % 2) : 
-        //     ((int)(std::floor(p.x / s)) % 2);
-
-        // const int y_parity = (s <= 0) ? 0 : (p.y < 0) ? 
-        //     ((int)(std::floor(((-1) * p.y) / s)) % 2) : 
-        //     ((int)(std::floor(p.y / s)) % 2);
         const int x_parity = s <= 0 ? 0 : std::floor(p.x / s);
         const int y_parity = s <= 0 ? 0 : std::floor(p.y / s);
 
@@ -160,9 +150,10 @@ inline Surface stripes(const Real s)
 {
     return [=] (const Point &p) -> Real {
 
-        const int x_parity = (s <= 0) ? 0 : (p.x < 0) ? 
-            ((int)(std::floor((-p.x + s) / s)) % 2) : 
-            ((int)(std::floor(p.x / s)) % 2);
+        // const int x_parity = (s <= 0) ? 0 : (p.x < 0) ? 
+        //     ((int)(std::floor((-p.x + s) / s)) % 2) : 
+        //     ((int)(std::floor(p.x / s)) % 2);
+        const int x_parity = s <= 0 ? 0 : std::floor(x / s) % 2;
 
         return (s <= 0) ? 0 : (x_parity == 0) ? 1 : 0; 
     };
