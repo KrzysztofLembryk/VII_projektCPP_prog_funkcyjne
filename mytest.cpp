@@ -68,6 +68,11 @@ void TEST_evaluate()
     assert(eval_func1(Point(1.2, 5)) == 1.44 + 1.2);
 }
 
+void TEST_compose()
+{
+    assert(compose()(4.2) == 4.2);
+    assert(compose([](auto x) {return x - 0.5;}, [](auto x) {return x * x;})(3.5) == 9);
+}
 
 int main()
 {

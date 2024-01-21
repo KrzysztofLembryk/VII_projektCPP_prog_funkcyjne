@@ -37,7 +37,7 @@ using Surface = std::function<Real(Point)>;
 /**
  * Generates plain f(x, y) = 0;
 */
-Surface plain()
+inline Surface plain()
 {
     // We want to stress that returned value is of type REAL.
     return []([[maybe_unused]] const Point &p) -> Real {return 0;};
@@ -46,7 +46,7 @@ Surface plain()
 /**
  * Generates slope f(x, y) = x;
 */
-Surface slope()
+inline Surface slope()
 {
     return [](const Point &p) -> Real {return p.x;};
 }
@@ -63,7 +63,7 @@ Surface slope()
  * second step: 2s <= x < 3s ... So we se that when taking floor(x / s)
  * we will get k that satisfies k * s <= x, and k is the number of step. 
 */
-Surface steps(const Real s = 1)
+inline Surface steps(const Real s = 1)
 {
     const Real step_height = STEP_HEIGHT;
 
@@ -75,7 +75,7 @@ Surface steps(const Real s = 1)
     };
 }
 
-Surface checkers(const Real s = 1)
+inline Surface checkers(const Real s = 1)
 {
     // Edge case with x and y negative
     return [s] (const Point &p) -> Real {
@@ -96,28 +96,28 @@ Surface checkers(const Real s = 1)
     }; 
 }
 
-Surface sqr()
+inline Surface sqr()
 {
     return [] (const Point &p) -> Real {
         return p.x * p.x;
     };
 }
 
-Surface sin_wave()
+inline Surface sin_wave()
 {
     return [] (const Point &p) -> Real {
         return std::sin(p.x);
     };
 }
 
-Surface cos_wave()
+inline Surface cos_wave()
 {
     return [] (const Point &p) -> Real {
         return std::cos(p.x);
     };
 }
 
-Surface rings(const Real s = 1)
+inline Surface rings(const Real s = 1)
 {
     auto calc_dist_from_zero = [] (const Point &p) -> Real {
         return std::sqrt(p.x * p.x + p.y * p.y);
@@ -128,7 +128,7 @@ Surface rings(const Real s = 1)
     };
 }
 
-Surface ellipse(const Real a = 1, const Real b = 1)
+inline Surface ellipse(const Real a = 1, const Real b = 1)
 {   
     auto check_if_in_ellipse = [=] (const Point &p) -> bool {
         return ((p.x * p.x ) / a + (p.y * p.y) / b) <= 1;
@@ -139,7 +139,7 @@ Surface ellipse(const Real a = 1, const Real b = 1)
     };
 }
 
-Surface rectangle(const Real a = 1, const Real b = 1)
+inline Surface rectangle(const Real a = 1, const Real b = 1)
 {
     auto check_if_inside = [=] (const Point &p) -> bool {
         return (p.x <= a / 2 && p.x >= -a / 2 && 
@@ -151,7 +151,7 @@ Surface rectangle(const Real a = 1, const Real b = 1)
     };
 }
 
-Surface stripes(const Real s)
+inline Surface stripes(const Real s)
 {
     return [=] (const Point &p) -> Real {
 
@@ -165,7 +165,7 @@ Surface stripes(const Real s)
 
 // FUNCTIONS FOR PLAIN MANIPULATION
 
-Surface rotate(const Surface &f, const Real deg)
+inline Surface rotate(const Surface &f, const Real deg)
 {
     return [=] (const Point &p) -> Real {
         const Real new_x = p.x * std::cos(deg) - p.y * std::sin(deg);
@@ -174,7 +174,7 @@ Surface rotate(const Surface &f, const Real deg)
     };
 }
 
-Surface translate(const Surface &f, const Point &vec)
+inline Surface translate(const Surface &f, const Point &vec)
 {
     return [=] (const Point &p) -> Real {
         const Real new_x = p.x + vec.x;
@@ -183,7 +183,7 @@ Surface translate(const Surface &f, const Point &vec)
     };
 }
 
-Surface scale(const Surface &f, const Point &scale)
+inline Surface scale(const Surface &f, const Point &scale)
 {
     return [=] (const Point &p) -> Real {
         const Real new_x = p.x * scale.x;
@@ -192,28 +192,28 @@ Surface scale(const Surface &f, const Point &scale)
     };
 }
 
-Surface invert(const Surface &f)
+inline Surface invert(const Surface &f)
 {
     return [=] (const Point &p) -> Real {
         return f(Point(p.y, p.x));
     };
 }
 
-Surface flip(const Surface &f)
+inline Surface flip(const Surface &f)
 {
     return [=] (const Point &p) -> Real {
         return f(Point(-p.x, p.y));
     };
 }
 
-Surface mul(const Surface &f, const Real c)
+inline Surface mul(const Surface &f, const Real c)
 {
     return [=] (const Point &p) -> Real {
         return f(p) * c;
     };
 }
 
-Surface add(const Surface &f, const Real c)
+inline Surface add(const Surface &f, const Real c)
 {
     return [=] (const Point &p) -> Real {
         return f(p) + c;
@@ -223,7 +223,8 @@ Surface add(const Surface &f, const Real c)
 // TEMPLATE FUNCTIONS
 
 template <typename H, typename T, typename... Args>
-constexpr Real unpack_and_calc_h(const Point &p, H &&h, T &&f, Args &&...args)
+inline constexpr Real unpack_and_calc_h(const Point &p, H &&h, T &&f, 
+    Args &&...args)
 {
     if constexpr (sizeof...(args) == 0)
     {
@@ -242,7 +243,7 @@ constexpr Real unpack_and_calc_h(const Point &p, H &&h, T &&f, Args &&...args)
 }
 
 template<typename T, typename... Args>
-Surface evaluate(T &&h, Args &&...f_args)
+inline Surface evaluate(T &&h, Args &&...f_args)
 {
     // We cannot do i.e. std::forward<T>(h) since we do [=] in lambda expr
     // thus we make a new object - a copy of h, so its no longer &&. 
@@ -252,5 +253,35 @@ Surface evaluate(T &&h, Args &&...f_args)
 
 }
 
+
+template <typename T, typename F, typename... Args>
+inline constexpr decltype(auto) calc_composition(const T &val, F &&f, Args &&...args)
+{
+    if constexpr (sizeof...(args) == 0)
+    {
+        return std::invoke(f, val);
+    }
+    else
+    {
+        const auto val = std::invoke(f, val);
+        return calc_composition(val, std::forward<Args>(args)...);
+    }
+}
+
+
+template<typename... Args>
+inline auto compose(Args &&...args)
+{
+    return [=] (const auto val) {
+        return calc_composition(val, args...);
+    };
+}
+
+inline auto compose()
+{
+    return [] (const auto val) {
+        return val;
+    };
+}
 
 #endif
