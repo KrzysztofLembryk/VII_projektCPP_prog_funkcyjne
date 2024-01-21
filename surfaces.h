@@ -21,7 +21,7 @@ public:
     const Real y;
 };
 
-std::ostream &operator<<(std::ostream &out, const Point &p)
+inline std::ostream &operator<<(std::ostream &out, const Point &p)
 {
     out << p.x << " " << p.y;
     return out;
@@ -223,7 +223,7 @@ inline Surface add(const Surface &f, const Real c)
 // TEMPLATE FUNCTIONS
 
 template <typename H, typename T, typename... Args>
-inline constexpr Real unpack_and_calc_h(const Point &p, H &&h, T &&f, 
+inline constexpr Real unpack_and_calc_h(const auto &p, H &&h, T &&f, 
     Args &&...args)
 {
     if constexpr (sizeof...(args) == 0)
@@ -247,7 +247,7 @@ inline Surface evaluate(T &&h, Args &&...f_args)
 {
     // We cannot do i.e. std::forward<T>(h) since we do [=] in lambda expr
     // thus we make a new object - a copy of h, so its no longer &&. 
-    return [=] (const Point &p) -> Real {
+    return [=] (const auto &p) {
         return unpack_and_calc_h(p, h, f_args...);
     };
 
