@@ -107,7 +107,7 @@ inline Surface sqr()
 inline Surface sin_wave()
 {
     return [] (const Point &p) -> Real {
-        const Real radians = p.x * (M_PI / SEMI_FULL_ANGLE);
+        const Real radians = (-1) * p.x * (M_PI / SEMI_FULL_ANGLE);
         return std::sin(radians);
     };
 }
@@ -115,7 +115,7 @@ inline Surface sin_wave()
 inline Surface cos_wave()
 {
     return [] (const Point &p) -> Real {
-        const Real radians = p.x * (M_PI / SEMI_FULL_ANGLE);
+        const Real radians = (-1) * p.x * (M_PI / SEMI_FULL_ANGLE);
         return std::cos(radians);
     };
 }
@@ -171,7 +171,7 @@ inline Surface stripes(const Real s)
 inline Surface rotate(const Surface &f, const Real deg)
 {
     return [=] (const Point &p) -> Real {
-        const Real radians = deg * (M_PI / SEMI_FULL_ANGLE); // = 180
+        const Real radians = (-1) * deg * (M_PI / SEMI_FULL_ANGLE); // = 180
         const Real new_x = p.x * std::cos(radians) - p.y * std::sin(radians);
         const Real new_y = p.x * std::sin(radians) + p.y * std::cos(radians);
         //std::cout << "old x: " << p.x << " --> " << new_x << "\n";
