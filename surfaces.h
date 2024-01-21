@@ -7,6 +7,7 @@
 #include <cmath>
 
 constexpr Real STEP_HEIGHT = 1;
+constexpr Real SEMI_FULL_ANGLE = 180;
 
 class Point
 {
@@ -168,8 +169,9 @@ inline Surface stripes(const Real s)
 inline Surface rotate(const Surface &f, const Real deg)
 {
     return [=] (const Point &p) -> Real {
-        const Real new_x = p.x * std::cos(deg) - p.y * std::sin(deg);
-        const Real new_y = p.y * std::cos(deg) + p.x * std::sin(deg);
+        const Real radians = deg * (M_PI / SEMI_FULL_ANGLE); // = 180
+        const Real new_x = p.x * std::cos(radians) - p.y * std::sin(radians);
+        const Real new_y = p.y * std::cos(radians) + p.x * std::sin(radians);
         return f(Point(new_x, new_y));
     };
 }
