@@ -38,6 +38,15 @@ void TEST_steps()
     assert(stepping_function(Point(-1, 112)) == -2);
     assert(stepping_function(Point(-5, 12)) == -6);
 
+    // s = 0.75
+    auto stepping_func_0_75 = steps(0.75);
+
+    assert(stepping_func_0_75(Point(0.5, 65)) == 0);
+    assert(stepping_func_0_75(Point(0.75, 65)) == 1);
+    assert(stepping_func_0_75(Point(1, 65)) == 1);
+    assert(stepping_func_0_75(Point(1.5, 65)) == 2);
+    assert(stepping_func_0_75(Point(1.55, 65)) == 2);
+
 }
 
 
@@ -58,6 +67,22 @@ void TEST_rings()
     assert(rings_func(Point(0.5, 1.5)) == 0);
 }
 
+void TEST_rotate()
+{
+    auto rotate_func = rotate(slope(), 90);
+
+    //assert(rotate_func(Point(0, 0)) == 0);
+    assert(rotate_func(Point(1, 0)) == 0.0);
+}
+
+void TEST_flip()
+{
+    auto flip_func = flip(slope());
+
+    assert(flip_func(Point(1, 1)) == -1);
+    assert(flip_func(Point(1.99, 1)) == -1.99);
+}
+
 void TEST_evaluate()
 {
     auto addition = [](Real const & x, Real const & y) {return x + y;};
@@ -76,10 +101,18 @@ void TEST_compose()
 
 int main()
 {
+    // Making plains test:
     TEST_plain();
     TEST_slope();
     TEST_steps();
     TEST_rings();
+
+    // Modifying plains tests:
+    TEST_rotate();
+    TEST_flip();
+
+    // Template tests:
     TEST_evaluate();
+    TEST_compose();
     return 0;
 }
