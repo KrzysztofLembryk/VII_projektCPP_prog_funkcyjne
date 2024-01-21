@@ -75,7 +75,7 @@ inline Surface steps(const Real s = 1)
     };
 }
 
-inline Surface checkers(const Real s = 1)
+inline Surface checker(const Real s = 1)
 {
     // Edge case with x and y negative
     return [s] (const Point &p) -> Real {
@@ -254,8 +254,8 @@ inline Surface evaluate(T &&h, Args &&...f_args)
 }
 
 
-template <typename T, typename F, typename... Args>
-inline constexpr decltype(auto) calc_composition(const T &val, F &&f, Args &&...args)
+template <typename F, typename... Args>
+inline constexpr auto calc_composition(const auto &val, F &&f, Args &&...args)
 {
     if constexpr (sizeof...(args) == 0)
     {
@@ -263,8 +263,8 @@ inline constexpr decltype(auto) calc_composition(const T &val, F &&f, Args &&...
     }
     else
     {
-        const auto val = std::invoke(f, val);
-        return calc_composition(val, std::forward<Args>(args)...);
+        const auto new_val = std::invoke(f, val);
+        return calc_composition(new_val, std::forward<Args>(args)...);
     }
 }
 
@@ -272,14 +272,14 @@ inline constexpr decltype(auto) calc_composition(const T &val, F &&f, Args &&...
 template<typename... Args>
 inline auto compose(Args &&...args)
 {
-    return [=] (const auto val) {
+    return [=] (const auto &val) {
         return calc_composition(val, args...);
     };
 }
 
 inline auto compose()
 {
-    return [] (const auto val) {
+    return [] (const auto &val) {
         return val;
     };
 }
