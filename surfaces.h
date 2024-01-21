@@ -153,9 +153,9 @@ inline Surface stripes(const Real s)
         // const int x_parity = (s <= 0) ? 0 : (p.x < 0) ? 
         //     ((int)(std::floor((-p.x + s) / s)) % 2) : 
         //     ((int)(std::floor(p.x / s)) % 2);
-        const int x_parity = s <= 0 ? 0 : std::floor(x / s) % 2;
+        const int x_parity = s <= 0 ? 0 : std::floor(p.x / s);
 
-        return (s <= 0) ? 0 : (x_parity == 0) ? 1 : 0; 
+        return (s <= 0) ? 0 : (x_parity %2 == 0) ? 1 : 0; 
     };
 }
 
@@ -176,8 +176,8 @@ inline Surface rotate(const Surface &f, const Real deg)
 inline Surface translate(const Surface &f, const Point &vec)
 {
     return [=] (const Point &p) -> Real {
-        const Real new_x = p.x + vec.x;
-        const Real new_y = p.y + vec.y;
+        const Real new_x = p.x - vec.x;
+        const Real new_y = p.y - vec.y;
         return f(Point(new_x, new_y));
     };
 }
@@ -185,8 +185,8 @@ inline Surface translate(const Surface &f, const Point &vec)
 inline Surface scale(const Surface &f, const Point &scale)
 {
     return [=] (const Point &p) -> Real {
-        const Real new_x = p.x * scale.x;
-        const Real new_y = p.y * scale.y;
+        const Real new_x = p.x * (1 / scale.x);
+        const Real new_y = p.y * (1 / scale.y);
         return f(Point(new_x, new_y));
     };
 }
