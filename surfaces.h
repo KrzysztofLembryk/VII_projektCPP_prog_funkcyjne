@@ -137,8 +137,8 @@ inline Surface ellipse(const Real a = 1, const Real b = 1)
 inline Surface rectangle(const Real a = 1, const Real b = 1)
 {
     auto check_if_inside = [=] (const Point &p) -> bool {
-        return (p.x <= a / 2 && p.x >= -a / 2 && 
-                p.y <= b / 2 && p.y >= -b / 2) ? 1 : 0;
+        return (p.x <= a && p.x >= -a && 
+                p.y <= b && p.y >= -b) ? 1 : 0;
     };
 
     return [=] (const Point &p) -> Real {
@@ -162,20 +162,22 @@ inline Surface stripes(const Real s)
 {
     return [=] (const Point &p) -> Real {
         
-        const Real curr_s = s;
+        //const Real curr_s = s;
         const Real first_grtr_or_eq_s = p.x < 0 ? 
-                            calc_first_greater_s_negative(curr_s, s, p.x) :   calc_first_greater_s_positive(0, s, p.x);
+                            calc_first_greater_s_negative(s, s, p.x) :   calc_first_greater_s_positive(0, s, p.x);
 
         const int x_parity = (s <= 0) ? 0 : (p.x < 0) ? 
            (std::floor((-p.x + s) / s)) : (std::floor(p.x / s));
 
-        const int positive_x = p.x >= 0 ? (p.x == first_grtr_or_eq_s ? 
+        const int positive_x = p.x > 0 ? (p.x == first_grtr_or_eq_s ? 
         (x_parity + 1) % 2 : x_parity % 2) : -1;
 
-        const int negative_x = 0;
+        //const int negative_x = p.x < 0 ? (p.x == first_grtr_or_eq_s ? 
+        //);
         //const int x_parity = s <= 0 ? 0 : std::floor(p.x / s);
         
-        return (s <= 0) ? 0 : (p.x > 0 ? (positive_x + 1) % 2 : negative_x); 
+        return (s <= 0) ? 0 : (p.x >= 0 ? (positive_x + 1) % 2 : 
+        (x_parity + 1) % 2); 
     };
 }
 

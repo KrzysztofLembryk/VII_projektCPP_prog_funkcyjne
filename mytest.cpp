@@ -96,12 +96,19 @@ void TEST_stripes()
 {
     auto stripes_func = stripes(1);
 
+    // Positive
     assert(stripes_func(Point(0, 5)) == 0);
     assert(stripes_func(Point(0.5, 5)) == 1);
     assert(stripes_func(Point(1, 5)) == 1);
     assert(stripes_func(Point(1.2, 5)) == 0);
     assert(stripes_func(Point(2, 5)) == 0);
     assert(stripes_func(Point(2.5, 5)) == 1);
+
+    // Negative
+    assert(stripes_func(Point(-0.5, 4)) == 0);
+    assert(stripes_func(Point(-1, 4)) == 1);
+    assert(stripes_func(Point(-1.5, 4)) == 1);
+    assert(stripes_func(Point(-2, 4)) == 0);
 }
 // MODIFYING PLAINS TESTS
 
