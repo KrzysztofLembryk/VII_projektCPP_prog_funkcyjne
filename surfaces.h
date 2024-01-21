@@ -126,7 +126,7 @@ inline Surface rings(const Real s = 1)
 inline Surface ellipse(const Real a = 1, const Real b = 1)
 {   
     auto check_if_in_ellipse = [=] (const Point &p) -> bool {
-        return ((p.x * p.x ) / a + (p.y * p.y) / b) <= 1;
+        return ((p.x * p.x ) / (a * a) + (p.y * p.y) / (b * b)) <= 1;
     };
 
     return [=] (const Point &p) -> Real {
