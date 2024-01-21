@@ -146,16 +146,36 @@ inline Surface rectangle(const Real a = 1, const Real b = 1)
     };
 }
 
+inline Real calc_first_greater_s_positive(const Real curr_s, const Real s, 
+    const Real x)
+{
+    return curr_s < x ? calc_first_greater_s_positive(curr_s + s, s, x) : curr_s;
+}
+
+inline Real calc_first_greater_s_negative(const Real curr_s, const Real s, 
+    const Real x)
+{
+    return curr_s > x ? calc_first_greater_s_negative(curr_s - s, s, x) : curr_s; 
+}
+
 inline Surface stripes(const Real s)
 {
     return [=] (const Point &p) -> Real {
+        
+        const Real curr_s = s;
+        const Real first_grtr_or_eq_s = p.x < 0 ? 
+                            calc_first_greater_s_negative(curr_s, s, p.x) :   calc_first_greater_s_positive(curr_s, s, p.x);
 
-        // const int x_parity = (s <= 0) ? 0 : (p.x < 0) ? 
-        //     ((int)(std::floor((-p.x + s) / s)) % 2) : 
-        //     ((int)(std::floor(p.x / s)) % 2);
-        const int x_parity = s <= 0 ? 0 : std::floor(p.x / s);
+        const int x_parity = (s <= 0) ? 0 : (p.x < 0) ? 
+           (std::floor((-p.x + s) / s)) : (std::floor(p.x / s));
 
-        return (s <= 0) ? 0 : (x_parity %2 == 0) ? 1 : 0; 
+        const int positive_x = p.x > 0 ? (p.x == first_grtr_or_eq_s ? 
+        (x_parity + 1) % 2 : x_parity % 2) : -1;
+
+        const int negative_x = 0;
+        //const int x_parity = s <= 0 ? 0 : std::floor(p.x / s);
+        
+        return (s <= 0) ? 0 : (p.x == 0 ? 0 : (p.x > 0 ? (positive_x + 1) % 2 : negative_x)); 
     };
 }
 

@@ -92,6 +92,17 @@ void TEST_rings()
     assert(rings_func(Point(0.5, 1.5)) == 0);
 }
 
+void TEST_stripes()
+{
+    auto stripes_func = stripes(1);
+
+    assert(stripes_func(Point(0, 5)) == 0);
+    assert(stripes_func(Point(0.5, 5)) == 1);
+    assert(stripes_func(Point(1, 5)) == 1);
+    assert(stripes_func(Point(1.2, 5)) == 0);
+    assert(stripes_func(Point(2, 5)) == 0);
+    assert(stripes_func(Point(2.5, 5)) == 1);
+}
 // MODIFYING PLAINS TESTS
 
 void TEST_rotate()
@@ -136,7 +147,7 @@ int main()
     TEST_steps();
     TEST_checker();
     TEST_rings();
-
+    TEST_stripes();
     // Modifying plains tests:
     TEST_rotate();
     TEST_flip();
