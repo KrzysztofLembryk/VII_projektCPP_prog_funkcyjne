@@ -8,6 +8,19 @@
 
 constexpr Real STEP_HEIGHT = 1;
 constexpr Real SEMI_FULL_ANGLE = 180;
+constexpr Real PLAIN_CONSTANT = 0;
+constexpr Real INIT_ARG_VAL = 1;
+
+constexpr Real RET_VAL_TRUE = 1;
+constexpr Real RET_VAL_FALSE = 0;
+constexpr Real RET_VAL_WRONG = 0;
+
+constexpr Real S_BOUND = 0;
+constexpr Real RECT_A_BOUND = 0;
+constexpr Real RECT_B_BOUND = 0;
+constexpr Real ELLIPSE_A_BOUND = 0;
+constexpr Real ELLIPSE_B_BOUND = 0;
+
 constexpr int EVEN = 0;
 constexpr int ODD = 1;
 
@@ -38,12 +51,12 @@ using Surface = std::function<Real(Point)>;
 // FUNCTIONS FOR CREATING PLAINS
 
 /**
- * Generates plain f(x, y) = 0;
+ * Generates plain f(x, y) = PLAIN_CONSTANT;
 */
 inline Surface plain()
 {
     // We want to stress that returned value is of type REAL.
-    return []([[maybe_unused]] const Point &p) -> Real {return Real(0);};
+    return []([[maybe_unused]] const Point &p) -> Real {return PLAIN_CONSTANT;};
 }
 
 /**
@@ -66,13 +79,13 @@ inline Surface slope()
  * second step: 2s <= x < 3s ... So we se that when taking floor(x / s)
  * we will get k that satisfies k * s <= x, and k is the number of step. 
 */
-inline Surface steps(const Real s = 1)
+inline Surface steps(const Real s = INIT_ARG_VAL)
 {
     const Real step_height = STEP_HEIGHT;
 
     return [s, step_height] (const Point &p) -> Real {
 
-        return (s <= 0) ? Real(0) : 
+        return (s <= S_BOUND) ? RET_VAL_WRONG : 
         ((p.x >= 0) ? Real(std::floor(p.x / s)* step_height) : 
         Real(std::floor(p.x / s) * step_height));
     };
@@ -85,16 +98,16 @@ inline Surface steps(const Real s = 1)
  * and y' = floor(y/s) and check whether (x' + y') % 2 == 0 since only when
  * we have the same parity of x and y f is equal to 1.
 */
-inline Surface checker(const Real s = 1)
+inline Surface checker(const Real s = INIT_ARG_VAL)
 {
     // Edge case with x and y negative
     return [=] (const Point &p) -> Real {
 
-        const int x_parity = s <= 0 ? 0 : std::floor(p.x / s);
-        const int y_parity = s <= 0 ? 0 : std::floor(p.y / s);
+        const int x_parity = s <= S_BOUND ? RET_VAL_WRONG : std::floor(p.x / s);
+        const int y_parity = s <= S_BOUND ? RET_VAL_WRONG : std::floor(p.y / s);
 
-        return (s <= 0) ? Real(0) : 
-                        ((x_parity + y_parity) % 2 == EVEN ? Real(1) : Real(0));
+        return (s <= S_BOUND) ? RET_VAL_WRONG : 
+            ((x_parity + y_parity) % 2 == EVEN ? RET_VAL_TRUE : RET_VAL_FALSE);
     }; 
 }
 
@@ -128,7 +141,7 @@ inline Surface cos_wave()
  * another case in if statement 1) checking if floor(dist / s) is odd but rest 
  * of division of dist / s is equal 0, then we return 1.
 */
-inline Surface rings(const Real s = 1)
+inline Surface rings(const Real s = INIT_ARG_VAL)
 {
     auto calc_dist_from_zero = [] (const Point &p) -> Real {
         return std::sqrt(p.x * p.x + p.y * p.y);
@@ -139,35 +152,37 @@ inline Surface rings(const Real s = 1)
         const Real dist = calc_dist_from_zero(p);
         const int dists_in_s = static_cast<int>(std::floor(dist / s));
         
-        return (s <= 0) ? Real(0) : (dist <= s) ? Real(1) : 
+        return (s <= S_BOUND) ? RET_VAL_WRONG : (dist <= s) ? RET_VAL_TRUE : 
             (dists_in_s % 2 == EVEN && fmod(dist, s) != 0) || 
-            (dists_in_s % 2 == ODD && fmod(dist, s) == 0)  ? Real(1) : Real(0);
+            (dists_in_s % 2 == ODD && fmod(dist, s) == 0)  ? RET_VAL_TRUE : 
+                RET_VAL_FALSE;
     };
 }
 
-inline Surface ellipse(const Real a = 1, const Real b = 1)
+inline Surface ellipse(const Real a = INIT_ARG_VAL, const Real b = INIT_ARG_VAL)
 {   
     auto check_if_in_ellipse = [=] (const Point &p) -> bool {
         return ((p.x * p.x ) / (a * a) + (p.y * p.y) / (b * b)) <= 1;
     };
 
     return [=] (const Point &p) -> Real {
-        return (a <= 0 || b <= 0) ? Real(0) : (check_if_in_ellipse(p) ? Real(1) : Real(0));
+        return (a <= ELLIPSE_A_BOUND || b <= ELLIPSE_B_BOUND) ? RET_VAL_WRONG : (check_if_in_ellipse(p) ? RET_VAL_TRUE : RET_VAL_FALSE);
     };
 }
 
 /**
  * Rectangle has sides equal to 2a and 2b. The center of rectangle is in (0, 0).
 */
-inline Surface rectangle(const Real a = 1, const Real b = 1)
+inline Surface rectangle(const Real a = INIT_ARG_VAL, 
+    const Real b = INIT_ARG_VAL)
 {
     auto check_if_inside = [=] (const Point &p) -> bool {
         return (p.x <= a && p.x >= -a && 
-                p.y <= b && p.y >= -b) ? 1 : 0;
+                p.y <= b && p.y >= -b) ? true : false;
     };
 
     return [=] (const Point &p) -> Real {
-        return (a <= 0 || b <= 0) ? Real(0) : (check_if_inside(p) ? Real(1) : Real(0));
+        return (a <= RECT_A_BOUND || b <= RECT_B_BOUND) ? RET_VAL_WRONG : (check_if_inside(p) ? RET_VAL_TRUE : RET_VAL_FALSE);
     };
 }
 
@@ -194,19 +209,19 @@ inline Real calc_first_greater_s_negative(const Real curr_s, const Real s,
 inline Surface stripes(const Real s)
 {
     return [=] (const Point &p) -> Real {
-        
-        //const Real curr_s = s;
-        const Real first_grtr_or_eq_s = s <= 0 ? 0 : (p.x < 0 ? 
-                            calc_first_greater_s_negative(s, s, p.x) :   calc_first_greater_s_positive(0, s, p.x));
 
-        const int x_parity = (s <= 0) ? 0 : (p.x < 0) ? 
+        const Real first_grtr_or_eq_s = s <= S_BOUND ? RET_VAL_WRONG : 
+        (p.x < 0 ? calc_first_greater_s_negative(s, s, p.x) :       
+                calc_first_greater_s_positive(0, s, p.x));
+
+        const int x_parity = (s <= S_BOUND) ? RET_VAL_WRONG : (p.x < 0) ? 
            (std::floor((-p.x + s) / s)) : (std::floor(p.x / s));
 
         const int positive_x = p.x > 0 ? (p.x == first_grtr_or_eq_s ? 
         (x_parity + 1) % 2 : x_parity % 2) : -1;
         
-        return (s <= 0) ? Real(0) : (p.x >= 0 ? Real((positive_x + 1) % 2) : 
-        Real((x_parity + 1) % 2)); 
+        return (s <= S_BOUND) ? RET_VAL_WRONG : (p.x >= 0 ? 
+            Real((positive_x + 1) % 2) : Real((x_parity + 1) % 2)); 
     };
 }
 
@@ -218,8 +233,6 @@ inline Surface rotate(const Surface &f, const Real deg)
         const Real radians = (-1) * deg * (M_PI / SEMI_FULL_ANGLE); // = 180
         const Real new_x = p.x * std::cos(radians) - p.y * std::sin(radians);
         const Real new_y = p.x * std::sin(radians) + p.y * std::cos(radians);
-        //std::cout << "old x: " << p.x << " --> " << new_x << "\n";
-        //std::cout << "old y: " << p.y << " --> " << new_y << "\n";
         return f(Point(new_x, new_y));
     };
 }
