@@ -43,9 +43,6 @@ inline std::ostream &operator<<(std::ostream &out, const Point &p)
     return out;
 }
 
-/**
- *  Maybe function should get Point via reference???
-*/
 using Surface = std::function<Real(Point)>;
 
 // FUNCTIONS FOR CREATING PLAINS
