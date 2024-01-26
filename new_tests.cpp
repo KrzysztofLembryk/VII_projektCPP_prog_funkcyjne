@@ -33,7 +33,7 @@ void tests() {
     
     assert(steps(2.0)(Point(1.9999, 1)) == 0.0);
     assert(steps(0.9)(Point(0.9999, -7)) == 1.0);
-    //assert(steps(0.9)(Point(-0.9, 117)) == -1.0);
+    assert(steps(0.9)(Point(-0.9, 117)) == -1.0);
 
     check_zero(steps(0.0));
     check_zero(steps(-0.001));
@@ -167,6 +167,9 @@ void tests() {
 int main()
 {
     tests();
+    //steps(1.0)(Point(-1, 117));
+
+    //cout << "floor: " << std::floor(-0.5 / 1) << "\n"; 
 
     return 0;
 }

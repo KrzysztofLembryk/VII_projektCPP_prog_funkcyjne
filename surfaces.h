@@ -56,7 +56,7 @@ inline Surface slope()
  * Generates step plain along OX, with step width = s (default = 1)
  * and step height = 1. 
  * If s <= 0 : f(x, y) = 0
- * For 0 <= x < s we have f(x, y) = 0,
+ * For 0 <= x < s we have f(x, y) = 1,
  * for -s <= x < 0 : f(x, y) = -1
  * Main formula for getting step height for given x: floor(x / s) * step_height
  * Since new step starts when x >= s, so we have 
@@ -72,7 +72,7 @@ inline Surface steps(const Real s = 1)
         
         return (s <= 0) ? Real(0) : 
         ((p.x >= 0) ? Real(std::floor(p.x / s)* step_height) : 
-        Real(std::floor(((-1) * p.x) / s) * (-1) * step_height - 1));
+        Real(std::floor(p.x / s) * step_height));
     };
 }
 
@@ -92,7 +92,7 @@ inline Surface checker(const Real s = 1)
 inline Surface sqr()
 {
     return [] (const Point &p) -> Real {
-        return p.x * p.x;
+        return Real(p.x * p.x);
     };
 }
 
@@ -100,7 +100,7 @@ inline Surface sin_wave()
 {
     return [] (const Point &p) -> Real {
         //const Real radians = (-1) * p.x * (M_PI / SEMI_FULL_ANGLE);
-        return std::sin(p.x);
+        return Real(std::sin(p.x));
     };
 }
 
@@ -108,7 +108,7 @@ inline Surface cos_wave()
 {
     return [] (const Point &p) -> Real {
         //const Real radians = (-1) * p.x * (M_PI / SEMI_FULL_ANGLE);
-        return std::cos(p.x);
+        return Real(std::cos(p.x));
     };
 }
 
@@ -119,7 +119,8 @@ inline Surface rings(const Real s = 1)
     };
 
     return [=] (const Point &p) -> Real {
-        return (s <= 0) ? 0 : (int)(calc_dist_from_zero(p) / s) % 2 == 0 ? 1 : 0;
+        return (s <= 0) ? Real(0) : 
+            (int)(calc_dist_from_zero(p) / s) % 2 == 0 ? Real(1) : Real(0);
     };
 }
 
