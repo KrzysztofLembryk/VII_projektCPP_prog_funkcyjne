@@ -169,5 +169,9 @@ int main()
 
     //cout << "floor: " << std::floor(-0.5 / 1) << "\n"; 
 
+    assert(evaluate([](){return 1.5;})(Point(-1.0, 2.0)) == 1.5);
+    assert(evaluate([](){return true;})(Point(-1.0, 2.0)) == true);
+    assert(evaluate([](){return std::make_pair(false, -0.125);})(Point(-1.0, 2.0)) == std::make_pair(false, -0.125));
+
     return 0;
 }

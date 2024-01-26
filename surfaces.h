@@ -320,6 +320,13 @@ inline auto evaluate(T &&h, Args &&...f_args)
 
 }
 
+template<typename T>
+inline auto evaluate(T &&h)
+{
+    return [=] ([[maybe_unused]] const auto &p) {
+        return std::invoke(h);
+    };
+}
 
 template <typename F, typename... Args>
 inline constexpr auto calc_composition(const auto &val, F &&f, Args &&...args)
