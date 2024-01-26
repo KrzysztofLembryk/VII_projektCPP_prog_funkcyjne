@@ -43,7 +43,7 @@ using Surface = std::function<Real(Point)>;
 inline Surface plain()
 {
     // We want to stress that returned value is of type REAL.
-    return []([[maybe_unused]] const Point &p) -> Real {return Real(0);};
+    return []([[maybe_unused]] const Point &p) -> Real {return 0;};
 }
 
 /**
@@ -78,13 +78,6 @@ inline Surface steps(const Real s = 1)
     };
 }
 
-/**
- * We want to create checkers board with tile of width = s.
- * When 0 <= x < s we have f(x, y) = 1, if 0 <= y < s
- * and f(x, y) = 0, if s <= y < 2 * s . Basically we calculate x'= floor(x/s) 
- * and y' = floor(y/s) and check whether (x' + y') % 2 == 0 since only when
- * we have the same parity of x and y f is equal to 1.
-*/
 inline Surface checker(const Real s = 1)
 {
     // Edge case with x and y negative
@@ -119,15 +112,6 @@ inline Surface cos_wave()
     };
 }
 
-/**
- * We calculate the distance of point p from (0, 0) and if floor(dist / s)
- * is even our function returns 1 (so our dist is dist = 2k * s + r), meaning
- * that we create a ring on which our function is 1, then another ring where is 
- * 0 etc. But we have edge cases i.e. when dist is 1, f should return 1, but 
- * with above approach we would return 0, since 1 is not even, so we need to add
- * another case in if statement 1) checking if floor(dist / s) is odd but rest 
- * of division of dist / s is equal 0, then we return 1.
-*/
 inline Surface rings(const Real s = 1)
 {
     auto calc_dist_from_zero = [] (const Point &p) -> Real {
@@ -152,13 +136,10 @@ inline Surface ellipse(const Real a = 1, const Real b = 1)
     };
 
     return [=] (const Point &p) -> Real {
-        return (a <= 0 || b <= 0) ? Real(0) : (check_if_in_ellipse(p) ? Real(1) : Real(0));
+        return (a <= 0 || b <= 0) ? 0 : (check_if_in_ellipse(p) ? 1 : 0);
     };
 }
 
-/**
- * Rectangle has sides equal to 2a and 2b. The center of rectangle is in (0, 0).
-*/
 inline Surface rectangle(const Real a = 1, const Real b = 1)
 {
     auto check_if_inside = [=] (const Point &p) -> bool {
@@ -167,7 +148,7 @@ inline Surface rectangle(const Real a = 1, const Real b = 1)
     };
 
     return [=] (const Point &p) -> Real {
-        return (a <= 0 || b <= 0) ? Real(0) : (check_if_inside(p) ? Real(1) : Real(0));
+        return (a <= 0 || b <= 0) ? 0 : (check_if_inside(p) ? 1 : 0);
     };
 }
 
@@ -183,14 +164,6 @@ inline Real calc_first_greater_s_negative(const Real curr_s, const Real s,
     return curr_s > x ? calc_first_greater_s_negative(curr_s - s, s, x) : curr_s; 
 }
 
-/**
- * If x >= 0 we calculate first S = k*s that S >= x, we need this since 
- * inequalities that we need to satisfy are 
- * f(x, y) = 1, if 0 < x <= s and f(x, y) = 0, if -s < x <= 0 etc.
- * Thus taking floor(x / s) is not good enough since i.e. 0 / s = 0 and we would
- * assign f = 1 if we did like in previous functions. We need S to check these
- * edge cases.
-*/
 inline Surface stripes(const Real s)
 {
     return [=] (const Point &p) -> Real {
@@ -205,8 +178,8 @@ inline Surface stripes(const Real s)
         const int positive_x = p.x > 0 ? (p.x == first_grtr_or_eq_s ? 
         (x_parity + 1) % 2 : x_parity % 2) : -1;
         
-        return (s <= 0) ? Real(0) : (p.x >= 0 ? Real((positive_x + 1) % 2) : 
-        Real((x_parity + 1) % 2)); 
+        return (s <= 0) ? 0 : (p.x >= 0 ? (positive_x + 1) % 2 : 
+        (x_parity + 1) % 2); 
     };
 }
 
@@ -272,13 +245,6 @@ inline Surface add(const Surface &f, const Real c)
 
 // TEMPLATE FUNCTIONS
 
-/**
- * Args - are functions that we want to invoke with p argument
- * H h - is a function that we want to invoke with all of results of Args 
- * functions invoked with p
- * so we want to calculate h(f1(p), f2(p), ..., fn(p)).
- * Thus in unpack_and_calc_h we take fi calc fi(p), then bind result with h.
-*/
 template <typename H, typename T, typename... Args>
 inline constexpr auto unpack_and_calc_h(const auto &p, H &&h, T &&f, 
     Args &&...args)
