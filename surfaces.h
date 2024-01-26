@@ -300,7 +300,7 @@ inline constexpr auto unpack_and_calc_h(const auto &p, H &&h, T &&f,
 }
 
 template<typename T, typename... Args>
-inline Surface evaluate(T &&h, Args &&...f_args)
+inline auto evaluate(T &&h, Args &&...f_args)
 {
     // We cannot do i.e. std::forward<T>(h) since we do [=] in lambda expr
     // thus we make a new object - a copy of h, so its no longer &&. 
