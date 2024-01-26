@@ -8,8 +8,6 @@
 
 constexpr Real STEP_HEIGHT = 1;
 constexpr Real SEMI_FULL_ANGLE = 180;
-constexpr int EVEN = 0;
-constexpr int ODD = 1;
 
 class Point
 {
@@ -58,7 +56,7 @@ inline Surface slope()
  * Generates step plain along OX, with step width = s (default = 1)
  * and step height = 1. 
  * If s <= 0 : f(x, y) = 0
- * For 0 <= x < s we have f(x, y) = 1,
+ * For 0 <= x < s we have f(x, y) = 0,
  * for -s <= x < 0 : f(x, y) = -1
  * Main formula for getting step height for given x: floor(x / s) * step_height
  * Since new step starts when x >= s, so we have 
@@ -71,10 +69,10 @@ inline Surface steps(const Real s = 1)
     const Real step_height = STEP_HEIGHT;
 
     return [s, step_height] (const Point &p) -> Real {
-
+        
         return (s <= 0) ? Real(0) : 
         ((p.x >= 0) ? Real(std::floor(p.x / s)* step_height) : 
-        Real(std::floor(p.x / s) * step_height));
+        Real(std::floor(((-1) * p.x) / s) * (-1) * step_height - 1));
     };
 }
 
@@ -94,28 +92,28 @@ inline Surface checker(const Real s = 1)
         const int y_parity = s <= 0 ? 0 : std::floor(p.y / s);
 
         return (s <= 0) ? Real(0) : 
-                        ((x_parity + y_parity) % 2 == EVEN ? Real(1) : Real(0));
+                        ((x_parity + y_parity) % 2 == 0 ? Real(1) : Real(0));
     }; 
 }
 
 inline Surface sqr()
 {
     return [] (const Point &p) -> Real {
-        return Real(p.x * p.x);
+        return p.x * p.x;
     };
 }
 
 inline Surface sin_wave()
 {
     return [] (const Point &p) -> Real {
-        return Real(std::sin(p.x));
+        return std::sin(p.x);
     };
 }
 
 inline Surface cos_wave()
 {
     return [] (const Point &p) -> Real {
-        return Real(std::cos(p.x));
+        return std::cos(p.x);
     };
 }
 
@@ -123,10 +121,7 @@ inline Surface cos_wave()
  * We calculate the distance of point p from (0, 0) and if floor(dist / s)
  * is even our function returns 1 (so our dist is dist = 2k * s + r), meaning
  * that we create a ring on which our function is 1, then another ring where is 
- * 0 etc. But we have edge cases i.e. when dist is 1, f should return 1, but 
- * with above approach we would return 0, since 1 is not even, so we need to add
- * another case in if statement 1) checking if floor(dist / s) is odd but rest 
- * of division of dist / s is equal 0, then we return 1.
+ * 0 etc.
 */
 inline Surface rings(const Real s = 1)
 {
@@ -135,13 +130,7 @@ inline Surface rings(const Real s = 1)
     };
 
     return [=] (const Point &p) -> Real {
-
-        const Real dist = calc_dist_from_zero(p);
-        const int dists_in_s = static_cast<int>(std::floor(dist / s));
-        
-        return (s <= 0) ? Real(0) : (dist <= s) ? Real(1) : 
-            (dists_in_s % 2 == EVEN && fmod(dist, s) != 0) || 
-            (dists_in_s % 2 == ODD && fmod(dist, s) == 0)  ? Real(1) : Real(0);
+        return (s <= 0) ? 0 : (int)(calc_dist_from_zero(p) / s) % 2 == 0 ? 1 : 0;
     };
 }
 
@@ -195,9 +184,8 @@ inline Surface stripes(const Real s)
 {
     return [=] (const Point &p) -> Real {
         
-        //const Real curr_s = s;
-        const Real first_grtr_or_eq_s = s <= 0 ? 0 : (p.x < 0 ? 
-                            calc_first_greater_s_negative(s, s, p.x) :   calc_first_greater_s_positive(0, s, p.x));
+        const Real first_grtr_or_eq_s = p.x < 0 ? 
+                            calc_first_greater_s_negative(s, s, p.x) :   calc_first_greater_s_positive(0, s, p.x);
 
         const int x_parity = (s <= 0) ? 0 : (p.x < 0) ? 
            (std::floor((-p.x + s) / s)) : (std::floor(p.x / s));
@@ -218,8 +206,6 @@ inline Surface rotate(const Surface &f, const Real deg)
         const Real radians = (-1) * deg * (M_PI / SEMI_FULL_ANGLE); // = 180
         const Real new_x = p.x * std::cos(radians) - p.y * std::sin(radians);
         const Real new_y = p.x * std::sin(radians) + p.y * std::cos(radians);
-        //std::cout << "old x: " << p.x << " --> " << new_x << "\n";
-        //std::cout << "old y: " << p.y << " --> " << new_y << "\n";
         return f(Point(new_x, new_y));
     };
 }
