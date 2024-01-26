@@ -320,6 +320,9 @@ inline auto evaluate(T &&h, Args &&...f_args)
 
 }
 
+/**
+ * Evaluate override needed to handle getting only h as function argument
+*/
 template<typename T>
 inline auto evaluate(T &&h)
 {
