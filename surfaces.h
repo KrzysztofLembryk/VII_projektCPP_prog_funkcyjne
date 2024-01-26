@@ -8,6 +8,8 @@
 
 constexpr Real STEP_HEIGHT = 1;
 constexpr Real SEMI_FULL_ANGLE = 180;
+constexpr int EVEN = 0;
+constexpr int ODD = 1;
 
 class Point
 {
@@ -69,7 +71,7 @@ inline Surface steps(const Real s = 1)
     const Real step_height = STEP_HEIGHT;
 
     return [s, step_height] (const Point &p) -> Real {
-        
+
         return (s <= 0) ? Real(0) : 
         ((p.x >= 0) ? Real(std::floor(p.x / s)* step_height) : 
         Real(std::floor(p.x / s) * step_height));
@@ -85,7 +87,7 @@ inline Surface checker(const Real s = 1)
         const int y_parity = s <= 0 ? 0 : std::floor(p.y / s);
 
         return (s <= 0) ? Real(0) : 
-                        ((x_parity + y_parity) % 2 == 0 ? Real(1) : Real(0));
+                        ((x_parity + y_parity) % 2 == EVEN ? Real(1) : Real(0));
     }; 
 }
 
@@ -99,7 +101,6 @@ inline Surface sqr()
 inline Surface sin_wave()
 {
     return [] (const Point &p) -> Real {
-        //const Real radians = (-1) * p.x * (M_PI / SEMI_FULL_ANGLE);
         return Real(std::sin(p.x));
     };
 }
@@ -107,7 +108,6 @@ inline Surface sin_wave()
 inline Surface cos_wave()
 {
     return [] (const Point &p) -> Real {
-        //const Real radians = (-1) * p.x * (M_PI / SEMI_FULL_ANGLE);
         return Real(std::cos(p.x));
     };
 }
@@ -119,8 +119,13 @@ inline Surface rings(const Real s = 1)
     };
 
     return [=] (const Point &p) -> Real {
-        return (s <= 0) ? Real(0) : 
-            (int)(calc_dist_from_zero(p) / s) % 2 == 0 ? Real(1) : Real(0);
+
+        const Real dist = calc_dist_from_zero(p);
+        const int dists_in_s = static_cast<int>(std::floor(dist / s));
+        
+        return (s <= 0) ? Real(0) : (dist <= s) ? Real(1) : 
+            (dists_in_s % 2 == EVEN && fmod(dist, s) != 0) || 
+            (dists_in_s % 2 == ODD && fmod(dist, s) == 0)  ? Real(1) : Real(0);
     };
 }
 

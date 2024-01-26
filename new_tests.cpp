@@ -63,19 +63,17 @@ void tests() {
     check_zero(checker(-1e18));
 
     // Rings
-    //assert(rings()(Point(1.0, 0.0)) == 1.0);
+    assert(rings()(Point(1.0, 0.0)) == 1.0);
     assert(rings()(Point(0.0, 0.0)) == 1.0);
     assert(rings()(Point(0.0, 1.00001)) == 0.0);
     assert(rings()(Point(0.0, 1.90001)) == 0.0);
-    //assert(rings()(Point(0.0, 2.00000)) == 0.0);
+    assert(rings()(Point(0.0, 2.00000)) == 0.0);
     assert(rings()(Point(1.0, 1.0)) == 0.0);
     
     assert(rings(3.0)(Point(1.0, 0.0)) == 1.0);
-    //assert(rings(3.1)(Point(3.1, 0.0)) == 1.0);
-    //assert(rings(5.0)(Point(3.0, 4.0)) == 1.0);
+    assert(rings(3.1)(Point(3.1, 0.0)) == 1.0);
+    assert(rings(5.0)(Point(3.0, 4.0)) == 1.0);
     assert(rings(5.0)(Point(3.0000001, 4.0)) == 0.0);
-
-    cout << "po rings\n";
     
     check_zero(rings(0.0));
     check_zero(rings(-0.001));
